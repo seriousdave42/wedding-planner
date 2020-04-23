@@ -1,0 +1,38 @@
+@using WeddingPlanner.Models;
+@model User;
+
+<div class="row justify-content-between">
+    <h1 class="col-8">Welcome to the Wedding Planner</h1>
+    <a asp-action="Logout">Log Out</a>
+</div>
+
+<table class="table table-striped">
+    <thead class="thead=dark">
+        <th scope="col">Wedding</th>
+        <th scope="col">Date</th>
+        <th scope="col">Guests</th>
+        <th scope="col">Action</th>
+    </thead>
+    @foreach (Wedding w in ViewBag.AllWeddings)
+    {
+        <tbody>
+            <td><a asp-action="SingleWedding" asp-route-weddingId="@w.WeddingId">@w.Wedder1 & @w.Wedder2</a></td>
+            <td>@w.Date.ToShortDateString()</td>
+            <td>@w.Attendees.Count</td>
+            @if (Model.RSVPs.Any(r => r.RSVP.WeddingId == w.WeddingId))
+            {
+                <td><a asp-action="unrsvp" asp-route-userId="@Model.UserId" asp-route-weddingId="@w.WeddingId">Un-RSVP</a></td>
+            }
+            else if (Model.WeddingsPlanned.Any(wp => wp.WeddingId == w.WeddingId))
+            {
+                <td><a asp-action="cancel" asp-route-weddingId="@w.WeddingId">Cancel</a></td>
+            }
+            else
+            {
+                <td><a asp-action="rsvp" asp-route-userId="@Model.UserId" asp-route-weddingId="@w.WeddingId">RSVP</a></td>
+            }
+        </tbody>
+    }
+</table>
+
+<a asp-action="Wedding" class="btn btn-primary">New Wedding</a>
